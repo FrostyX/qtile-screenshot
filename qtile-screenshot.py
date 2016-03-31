@@ -25,7 +25,6 @@ parser.add_argument("-e", "--with-empty",
     help="make screenshot even from empty workspaces"
 )
 
-# @TODO
 parser.add_argument("--one-empty",
     dest="one_empty",
     action="store_true",
@@ -54,9 +53,12 @@ def groups(qtile):
     # @TODO Sort groups in a way that they are in the bar
     if args.groups:
         return filter(lambda x: x in args.groups, qtile.groups())
-    elif not args.empty:
-        return filter(lambda x: qtile.groups()[x]["windows"], qtile.groups())
-    return qtile.groups()
+    elif args.empty:
+        return qtile.groups()
+    elif args.one_empty:
+        return ((filter(lambda x: not qtile.groups()[x]["windows"], qtile.groups()) + [None])[:1] +
+                filter(lambda x: qtile.groups()[x]["windows"], qtile.groups()))
+    return filter(lambda x: qtile.groups()[x]["windows"], qtile.groups())
 
 
 def main():
