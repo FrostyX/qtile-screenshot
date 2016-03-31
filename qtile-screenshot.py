@@ -10,7 +10,6 @@ parser = argparse.ArgumentParser(
     description="Make screenshot of all your groups"
 )
 
-# @TODO
 parser.add_argument("--groups", "--desktops", "--workspaces",
     dest="groups",
     nargs="*",
@@ -33,6 +32,8 @@ parser.add_argument("--one-empty",
     help="show at most one empty groups if there is such"
 )
 
+args = parser.parse_args()
+
 
 def print_screen():
     w = gdk.get_default_root_window()
@@ -49,15 +50,19 @@ def compose(pb1, pb2):
     return pb3
 
 
-def main():
-    args = parser.parse_args()
+def groups(qtile):
+    if args.groups:
+        return filter(lambda x: x in args.groups, qtile.groups())
+    return qtile.groups()
 
+
+def main():
     c = Client()
     current_screen = c.screen.info()["index"]
     current_group = c.group.info()["name"]
 
     shoots = []
-    for group in c.groups():
+    for group in groups(c):
         c.group[group].toscreen(0)
         time.sleep(0.1)
         shoots.append(print_screen())
