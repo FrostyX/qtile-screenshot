@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
 
+import os
 import time
 import argparse
+from datetime import datetime
 from gtk import gdk
 from libqtile.command import Client
 
@@ -29,6 +31,12 @@ parser.add_argument("--one-empty",
     dest="one_empty",
     action="store_true",
     help="show at most one empty groups if there is such"
+)
+
+parser.add_argument('-o', '--output',
+    type=str,
+    dest='output',
+    help='path to output directory or path to screenshot file'
 )
 
 args = parser.parse_args()
@@ -77,8 +85,9 @@ def main():
     for shoot in shoots[1:]:
         img = compose(img, shoot)
 
-    # @TODO Generate default filename and add -o --output argument
-    img.save("/tmp/screenshot.png","png")
+    dirname = args.output and os.path.dirname(args.output) or "/tmp"
+    basename = args.output and os.path.basename(args.output) or datetime.now().strftime("qtile_%F_%R:%S")
+    img.save(os.path.join(dirname, basename), "png")
 
 
 if __name__ == "__main__":
