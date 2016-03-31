@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+
 import time
 import argparse
 from gtk import gdk
@@ -51,6 +52,7 @@ def compose(pb1, pb2):
 
 
 def groups(qtile):
+    # @TODO Sort groups in a way that they are in the bar
     if args.groups:
         return filter(lambda x: x in args.groups, qtile.groups())
     return qtile.groups()
@@ -72,6 +74,7 @@ def main():
     for shoot in shoots[1:]:
         img = compose(img, shoot)
 
+    # @TODO Generate default filename and add -o --output argument
     img.save("/tmp/screenshot.png","png")
 
 
