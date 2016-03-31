@@ -19,7 +19,6 @@ parser.add_argument("--groups", "--desktops", "--workspaces",
     help="workspaces that only should be on the screenshot"
 )
 
-# @TODO
 parser.add_argument("-e", "--with-empty",
     dest="empty",
     action="store_true",
@@ -55,6 +54,8 @@ def groups(qtile):
     # @TODO Sort groups in a way that they are in the bar
     if args.groups:
         return filter(lambda x: x in args.groups, qtile.groups())
+    elif not args.empty:
+        return filter(lambda x: qtile.groups()[x]["windows"], qtile.groups())
     return qtile.groups()
 
 
