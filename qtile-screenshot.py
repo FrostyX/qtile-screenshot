@@ -37,7 +37,6 @@ parser.add_argument("--one-empty",
 def print_screen():
     w = gdk.get_default_root_window()
     sz = w.get_size()
-    print "The size of the window is %d x %d" % sz
     pb = gdk.Pixbuf(gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
     pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
     return pb
