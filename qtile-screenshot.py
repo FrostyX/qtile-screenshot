@@ -1,8 +1,37 @@
 #!/usr/bin/python
 
 import time
+import argparse
 from gtk import gdk
 from libqtile.command import Client
+
+parser = argparse.ArgumentParser(
+    prog = "qtile-screenshot",
+    description="Make screenshot of all your groups"
+)
+
+# @TODO
+parser.add_argument("--groups", "--desktops", "--workspaces",
+    dest="groups",
+    nargs="*",
+    type=str,
+    default=[],
+    help="workspaces that only should be on the screenshot"
+)
+
+# @TODO
+parser.add_argument("-e", "--with-empty",
+    dest="empty",
+    action="store_true",
+    help="make screenshot even from empty workspaces"
+)
+
+# @TODO
+parser.add_argument("--one-empty",
+    dest="one_empty",
+    action="store_true",
+    help="show at most one empty groups if there is such"
+)
 
 
 def print_screen():
@@ -22,6 +51,8 @@ def compose(pb1, pb2):
 
 
 def main():
+    args = parser.parse_args()
+
     c = Client()
     current_screen = c.screen.info()["index"]
     current_group = c.group.info()["name"]
