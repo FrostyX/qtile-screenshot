@@ -85,8 +85,12 @@ def main():
     for shoot in shoots[1:]:
         img = compose(img, shoot)
 
-    dirname = args.output and os.path.dirname(args.output) or "/tmp"
-    basename = args.output and os.path.basename(args.output) or datetime.now().strftime("qtile_%F_%R:%S")
+
+    dirname = "/tmp"
+    basename = datetime.now().strftime("qtile_%F_%R:%S")
+    if args.output:
+        dirname = args.output if os.path.isdir(args.output) else os.path.dirname(args.output)
+        basename = basename if os.path.isdir(args.output) else os.path.basename(args.output)
     img.save(os.path.join(dirname, basename), "png")
 
 
