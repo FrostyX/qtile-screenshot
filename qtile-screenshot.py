@@ -60,7 +60,7 @@ def compose(pb1, pb2):
 def groups(qtile):
     # @TODO Sort groups in a way that they are in the bar
     if args.groups:
-        return filter(lambda x: x in args.groups, qtile.groups())
+        return filter(lambda x: x in qtile.groups(), args.groups)
     elif args.empty:
         return qtile.groups()
     elif args.one_empty:
