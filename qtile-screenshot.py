@@ -5,8 +5,12 @@ import os
 import time
 import argparse
 from datetime import datetime
-from gtk import gdk
 from libqtile.command import Client
+
+import gi
+gi.require_version('Gdk', '3.0')
+from gi.repository import Gdk, GdkPixbuf
+
 
 parser = argparse.ArgumentParser(
     prog = "qtile-screenshot",
@@ -43,17 +47,16 @@ args = parser.parse_args()
 
 
 def print_screen():
-    w = gdk.get_default_root_window()
-    sz = w.get_size()
-    pb = gdk.Pixbuf(gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
-    pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
+    w = Gdk.get_default_root_window()
+    sz = w.get_geometry()[2:4]
+    pb = Gdk.pixbuf_get_from_window(w, 0, 0, sz[0], sz[1])
     return pb
 
 
 def compose(pb1, pb2):
-    pb3 = gdk.Pixbuf(gdk.COLORSPACE_RGB, False, 8, pb1.props.width + pb2.props.width, pb1.props.height)
-    pb1.composite(pb3, 0, 0, pb1.props.width, pb1.props.height, 0, 0, 1.0, 1.0, gdk.INTERP_HYPER, 255)
-    pb2.composite(pb3, pb1.props.width, 0, pb2.props.width, pb1.props.height, pb1.props.width, 0, 1.0, 1.0, gdk.INTERP_HYPER, 255)
+    pb3 = GdkPixbuf.Pixbuf.new(GdkPixbuf.Colorspace.RGB, False, 8, pb1.props.width + pb2.props.width, pb1.props.height)
+    pb1.composite(pb3, 0, 0, pb1.props.width, pb1.props.height, 0, 0, 1.0, 1.0, GdkPixbuf.InterpType.HYPER, 255)
+    pb2.composite(pb3, pb1.props.width, 0, pb2.props.width, pb1.props.height, pb1.props.width, 0, 1.0, 1.0, GdkPixbuf.InterpType.HYPER, 255)
     return pb3
 
 
@@ -91,7 +94,7 @@ def main():
     if args.output:
         dirname = args.output if os.path.isdir(args.output) else os.path.dirname(args.output)
         basename = basename if os.path.isdir(args.output) else os.path.basename(args.output)
-    img.save(os.path.join(dirname, basename), "png")
+    img.savev(os.path.join(dirname, basename), "png", [], [])
 
 
 if __name__ == "__main__":
